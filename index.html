@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+  body {
+    font-family: 'Segoe UI', sans-serif;
+    text-align: center;
+    background-color: #fdf6f9;
+    color: #555;
+    padding: 20px;
+  }
+
+  h1 {
+    color: #d881a7;
+  }
+
+  input {
+    padding: 12px;
+    border: 2px solid #efcada;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    outline: none;
+  }
+
+  button {
+    background-color: #8cc6a5;
+    color: white;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 20px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+
+  button:hover {
+    background-color: #7ab594;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin-top: 20px;
+  }
+
+  li {
+    background: white;
+    margin: 8px auto;
+    padding: 10px;
+    width: 80%;
+    max-width: 300px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    border-left: 4px solid #d881a7;
+  }
+</style>
+  <title>Controle de Bebê</title>
+</head>
+<body>
+
+<h1>REGISTRAR MAMADA DO BB </h1>
+
+<input type="text" id="horario" placeholder="Ex: 14:30">
+<button onclick="salvar()">Salvar</button>
+
+<ul id="lista"></ul>
+
+<script>
+async function salvar() {
+  const horario = new Date().toLocaleTimeString();
+
+  await fetch('http://localhost:3000/mamadas', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ horario })
+  });
+
+  carregar();
+}
+
+async function carregar() {
+  const res = await fetch('http://localhost:3000/mamadas');
+  const dados = await res.json();
+
+  const lista = document.getElementById('lista');
+  lista.innerHTML = '';
+
+  dados.forEach(item => {
+    const li = document.createElement('li');
+    li.innerText = item.horario;
+    lista.appendChild(li);
+  });
+}
+
+carregar();
+</script>
+
+</body>
+</html>
